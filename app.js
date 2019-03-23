@@ -12,8 +12,10 @@ if (process.env.http_handle_static) {
     app.use(express.static(process.env.http_static_path));
 }
 
-const indexRoute = require('./routes/index');
-app.use(indexRoute.basePath, indexRoute.router);
+require('fs').readdirSync('./routes').forEach((fileName) => {
+    const route = require("./routes/" + fileName);
+    app.use(route.basePath, route.router);
+});
 
 module.exports = app;
 
