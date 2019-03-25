@@ -11,11 +11,8 @@ class Security {
         }).unless({
             /* not secure paths */
             path: [
-                '/',
-                '/favicon.ico',
                 /^\/api\/v1\/auth\/instagram/,
-                process.env.http_static_path,
-                process.env.http_static_path,
+                /^((?!\/api).)*$/
             ]
         });
     }
@@ -28,7 +25,7 @@ class Security {
         return security.sign(
             content,
             this._jwtSecret,
-            {expiresIn: expressJwt()}
+            {expiresIn: expiresIn}
         );
     }
 }

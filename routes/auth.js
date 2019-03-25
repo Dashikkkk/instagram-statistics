@@ -31,6 +31,7 @@ router.get('/instagram', async (req, res, next) => {
             jwt: security.sign(token),
         });
     } catch (err) {
+        console.log('error: ', err);
         res.json(err);
     }
 });

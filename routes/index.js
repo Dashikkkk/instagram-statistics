@@ -5,7 +5,7 @@ const router = express.Router();
  * entry point
  */
 router.get('/', (req, res, next) => {
-  res.redirect('/frontend/index.html');
+  res.redirect('/index.html');
 });
 
 module.exports = {
