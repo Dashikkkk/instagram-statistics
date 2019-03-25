@@ -7,15 +7,14 @@ services:
 
   #db
   app.db:
-    class: ./db/Db
+    class: ./app/Db
 
   #DAO
   dao.user:
-    class: ./db/dao/UserDAO
+    class: ./auth/dao/UserDAO
     arguments: ["@app.db"]
 
   #Logic (Domains)
   logic.user:
-    class: ./logic/UserLogic
+    class: ./auth/logic/UserLogic
     arguments: ["@dao.user"]
-
