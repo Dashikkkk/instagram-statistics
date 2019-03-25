@@ -17,10 +17,21 @@ class Security {
         });
     }
 
+    /**
+     * returns express middleware for jwt
+     *
+     * @returns {*}
+     */
     getExpressMiddleware() {
         return this._jwtM;
     }
 
+    /**
+     * sign data and encode them to jwt
+     *
+     * @param content
+     * @returns string
+     */
     sign(content) {
         return security.sign(
             content,
