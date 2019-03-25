@@ -4,3 +4,4 @@ sqlite3.exe
 db.sqlite3
 features
 .idea
+test.js
