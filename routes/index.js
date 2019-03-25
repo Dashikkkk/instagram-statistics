@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
+/**
+ * entry point
+ */
 router.get('/', (req, res, next) => {
-  res.send('Test');
-});
-
-router.get('/protected', (req, res, next) => {
-  res.send('You shouldnt be here');
+  res.redirect('/frontend/index.html');
 });
 
 module.exports = {

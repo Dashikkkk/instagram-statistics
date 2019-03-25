@@ -1,6 +1,7 @@
 require('dotenv').config();
 
-const app = require('./app');
+const root = require('app-root-path').path;
+const app = require(root + '/app/app');
 const http = require('http');
 
 app.set('port', process.env.http_port);
