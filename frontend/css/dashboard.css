@@ -1,0 +1,10 @@
+.info-box {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+@media (min-width: 768px) {
+    .info-box:nth-child(even) {
+        border-left: 1px silver solid;
+    }
+}
