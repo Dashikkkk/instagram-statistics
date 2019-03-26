@@ -68,7 +68,7 @@ router.get('/refresh', async (req, res, next) => {
 
     req.user.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-    await userLogic.updateLoginData(data);
+    await userLogic.updateLoginData(req.user);
 
     res.json({jwt: security.sign(req.user)});
 });
