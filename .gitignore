@@ -58,4 +58,9 @@ typings/
 .env
 
 # next.js build output
-.next
+
+sqlite3.exe
+db.sqlite3
+features
+.idea
+test.js

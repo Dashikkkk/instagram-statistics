@@ -1,0 +1,20 @@
+services:
+  #auth, security
+  app.auth.instagram:
+    class: ./auth/InstagramAuth
+  app.auth.security:
+    class: ./auth/Security
+
+  #db
+  app.db:
+    class: ./app/Db
+
+  #DAO
+  dao.user:
+    class: ./auth/dao/UserDAO
+    arguments: ["@app.db"]
+
+  #Logic (Domains)
+  logic.user:
+    class: ./auth/logic/UserLogic
+    arguments: ["@dao.user"]
