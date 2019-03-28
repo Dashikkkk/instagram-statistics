@@ -2,6 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 
+const defaultUrl = '/dashboard.html';
+
 /**
  * get url of auth over instagram
  */
@@ -29,7 +31,6 @@ router.get('/instagram', async (req, res, next) => {
          */
 
         const data = {
-            token: token.access_token,
             user: {
                 instagramId: token.user.id,
                 userName: token.user.username,
@@ -38,12 +39,18 @@ router.get('/instagram', async (req, res, next) => {
             ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
         };
 
-        await userLogic.updateLoginData(data);
-
-        res.json({
-            data: data,
-            jwt: security.sign(data),
+        await userLogic.updateLoginData({
+            token: token.access_token,
+            ...data
         });
+
+        res.cookie(
+            'auth',
+            security.sign(data),
+            {maxAge: 3600, httpOnly: false}
+        );
+
+        res.redirect(defaultUrl);
     } catch (err) {
         console.log('error: ', err);
         res.json(err);
