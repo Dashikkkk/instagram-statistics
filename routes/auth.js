@@ -1,6 +1,45 @@
 const express = require('express');
+const moment = require('moment');
 
 const router = express.Router();
+
+const defaultUrl = '/dashboard.html';
+
+/**
+ * returns client ip address
+ *
+ * @param req
+ * @returns {*|string}
+ */
+function getClientIp(req) {
+    return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+}
+
+/**
+ * Common login procedure, store login data, set cookie and redirect
+ *
+ * @param req
+ * @param res
+ * @param data
+ * @returns {Promise<void>}
+ */
+async function commonLogin(req, res, data) {
+    const userLogic = req.container.get('logic.user');
+    const security = req.container.get('app.auth.security');
+
+    data.ip = getClientIp(req);
+
+    await userLogic.updateLoginData(data);
+
+    const expire = moment().unix() + 3600 * 48; // +two days
+    res.cookie(
+        'auth_token',
+        security.sign(data),
+        {expire: expire, httpOnly: false},
+    );
+
+    res.redirect(302, defaultUrl);
+}
 
 /**
  * get url of auth over instagram
@@ -12,13 +51,12 @@ router.get('/instagram/url', (req, res, next) => {
     });
 });
 
+
 /**
  * instagram auth callback
  */
 router.get('/instagram', async (req, res, next) => {
     const instagram = req.container.get('app.auth.instagram');
-    const security = req.container.get('app.auth.security');
-    const userLogic = req.container.get('logic.user');
 
     try {
         const token = await instagram.authorize(req.query.code);
@@ -35,15 +73,35 @@ router.get('/instagram', async (req, res, next) => {
                 userName: token.user.username,
                 fullName: token.user.full_name,
             },
-            ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
         };
 
-        await userLogic.updateLoginData(data);
+        await commonLogin(req, res, data, token);
+    } catch (err) {
+        console.log('error: ', err);
+        res.json(err);
+    }
+});
 
-        res.json({
-            data: data,
-            jwt: security.sign(data),
-        });
+/**
+ * auth by instagram account name, should be set in config
+ */
+router.get('/name', async (req, res) => {
+    // allow only if enabled in config
+    if (process.env.auth_by_name === 'false') {
+        return res.status(401).send('Not authorized');
+    }
+
+    const name = req.query.name;
+    const instagram = req.container.get('parser.native.common');
+    try {
+        const details = await instagram.get(name);
+
+        const data = {
+            token: '',
+            user: details.user,
+        };
+
+        await commonLogin(req, res, data);
     } catch (err) {
         console.log('error: ', err);
         res.json(err);
@@ -66,7 +124,7 @@ router.get('/refresh', async (req, res, next) => {
     const security = req.container.get('app.auth.security');
     const userLogic = req.container.get('logic.user');
 
-    req.user.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    req.user.ip = getClientIp(req);
 
     await userLogic.updateLoginData(req.user);
 

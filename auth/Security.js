@@ -12,6 +12,7 @@ class Security {
             /* not secure paths */
             path: [
                 /^\/api\/v1\/auth\/instagram/,
+                /^\/api\/v1\/auth\/name/,
                 /^((?!\/api).)*$/
             ]
         });

@@ -16,6 +16,7 @@
     "morgan": "^1.9.1",
     "node-dependency-injection": "^2.2.1",
     "node-instagram": "^4.3.0",
+    "request": "^2.88.0",
     "sqlite3": "^4.0.6"
   },
   "devDependencies": {
