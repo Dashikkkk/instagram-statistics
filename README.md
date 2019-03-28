@@ -8,7 +8,7 @@ This app is not ready yet, please wait for a bit xD
 Back:
 1. *(ready)* login using instagram 
 2. *(ready)* save login info to db
-3. use parser to collect instagram stats
+3. *(ready)* use parser to collect instagram stats
 4. use api to collect instagram stats
 5. save stats to db
 6. worker file for collecting stats
