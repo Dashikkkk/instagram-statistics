@@ -1,5 +1,5 @@
 # smm-statistics 
-Colect and analyse detaled instagram statistics.
+Colect and analyse detailed instagram statistics. Makes world better xD
 
 This app is not ready yet, please wait for a bit xD
 
