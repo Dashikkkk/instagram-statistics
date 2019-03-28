@@ -18,3 +18,11 @@ services:
   logic.user:
     class: ./auth/logic/UserLogic
     arguments: ["@dao.user"]
+
+  #parser - native
+  parser.native.requester:
+    class: ./parser/native/Requester
+
+  parser.native.common:
+    class: ./parser/native/CommonParser
+    arguments: ["@parser.native.requester"]
