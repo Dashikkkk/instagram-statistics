@@ -13,7 +13,7 @@ class UserDAO {
      *
      * @param instagramId
      * @param values (name, fullName, ip, accessToken)
-     * @returns {Promise<void>}
+     * @returns {Promise<int>}
      */
     async saveUserInfo(instagramId, values) {
         const currentTime = moment().unix();
@@ -23,20 +23,24 @@ class UserDAO {
         );
 
         if (result) {
-            return await this._db.execute(
+            await this._db.execute(
                 'update user set name = ?, full_name = ?, ip = ?, access_token = ?, \
                     last_login = ?, updated_at = ? where id = ?',
                 [values.userName, values.fullName, values.accessToken,
                     values.ip, currentTime, currentTime, result.id]
-            )
+            );
+
+            return result.id;
         } else {
-            return await this._db.execute(
+            await this._db.execute(
                 'insert into user(instagram_id, name, full_name, ip, access_token, \
                     last_login, created_at, updated_at) values \
                     (?, ?, ?, ?, ?, ?, ?, ?)',
                 [instagramId, values.userName, values.fullName, values.ip,
                     values.accessToken, currentTime, currentTime, currentTime]
             );
+
+            return await this._db.getLastInsertedId();
         }
     }
 

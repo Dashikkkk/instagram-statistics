@@ -12,7 +12,7 @@ Back:
 4. use api to collect instagram stats
 5. *(ready)* save stats to db
 6. *(ready)* worker file for collecting stats
-7. worker runs api
+7. *(ready)* worker runs api
 8. prepare reports based on stats
 9. reports api
 

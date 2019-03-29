@@ -28,8 +28,7 @@ async function commonLogin(req, res, data) {
     const security = req.container.get('app.auth.security');
 
     data.ip = getClientIp(req);
-
-    await userLogic.updateLoginData(data);
+    data.user.id = await userLogic.updateLoginData(data);
 
     const expire = moment().unix() + 3600 * 48; // +two days
     res.cookie(

@@ -41,6 +41,17 @@ class CollectorLogic {
     async getUsersForCollect() {
         return await this._userDAO.getActiveUsers();
     }
+
+    /**
+     * Get last amount of collects for given user
+     *
+     * @param userId
+     * @param amount
+     * @returns {Promise<*|Array>}
+     */
+    async getLastCollects(userId, amount) {
+        return await this._collectorDAO.getLastCollects(userId, amount);
+    }
 }
 
 module.exports.default = CollectorLogic;
