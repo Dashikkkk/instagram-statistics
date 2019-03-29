@@ -1,4 +1,7 @@
 const moment = require('moment');
+const _ = require('lodash');
+
+const ActiveUserThreshold = 3600 * 24 * 2; // logged in within 2 days
 
 class UserDAO {
     constructor(db) {
@@ -35,6 +38,22 @@ class UserDAO {
                     values.accessToken, currentTime, currentTime, currentTime]
             );
         }
+    }
+
+    /**
+     * Returns active users ids and names
+     *
+     * @returns {Promise<Array>}
+     */
+    async getActiveUsers() {
+        const result = await this._db.query('select id, name from user where last_login > ?',
+            [moment().unix() - ActiveUserThreshold]);
+        return _.map(result, (row) => {
+            return {
+                id: row.id,
+                name: row.name,
+            }
+        });
     }
 }
 

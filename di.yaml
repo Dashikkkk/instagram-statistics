@@ -1,4 +1,5 @@
 services:
+
   #auth, security
   app.auth.instagram:
     class: ./auth/InstagramAuth
@@ -14,10 +15,26 @@ services:
     class: ./auth/dao/UserDAO
     arguments: ["@app.db"]
 
+  dao.collector:
+    class: ./stats/dao/CollectorDAO
+    arguments: ["@app.db"]
+
+  dao.account:
+    class: ./stats/dao/AccountDAO
+    arguments: ["@app.db"]
+
+  dao.post:
+    class: ./stats/dao/PostDAO
+    arguments: ["@app.db"]
+
   #Logic (Domains)
   logic.user:
     class: ./auth/logic/UserLogic
     arguments: ["@dao.user"]
+
+  logic.collector:
+    class: ./stats/logic/CollectorLogic
+    arguments: ["@parser.native.common", "@dao.collector", "@dao.account", "@dao.post", "@dao.user"]
 
   #parser - native
   parser.native.requester:

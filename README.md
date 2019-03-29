@@ -10,8 +10,8 @@ Back:
 2. *(ready)* save login info to db
 3. *(ready)* use parser to collect instagram stats
 4. use api to collect instagram stats
-5. save stats to db
-6. worker file for collecting stats
+5. *(ready)* save stats to db
+6. *(ready)* worker file for collecting stats
 7. worker runs api
 8. prepare reports based on stats
 9. reports api

@@ -3,11 +3,14 @@
   "description": "Collect, process, analyze and make reports based on instagram statistics",
   "main": "main.js",
   "scripts": {
-    "app": "node main.js"
+    "app": "node main.js",
+    "collect": "node collect.js"
   },
   "dependencies": {
+    "aigle": "^1.13.0",
     "app-root-path": "^2.2.0",
     "dotenv": "^7.0.0",
+    "es6-promise-pool": "^2.5.0",
     "express": "^4.16.4",
     "express-jwt": "^5.3.1",
     "jsonwebtoken": "^8.5.1",
