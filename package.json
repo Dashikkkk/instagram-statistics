@@ -1,5 +1,5 @@
 {
-  "name": "instagram-statistics",
+  "name": "smm-statistics",
   "description": "Collect, process, analyze and make reports based on instagram statistics",
   "main": "main.js",
   "scripts": {
