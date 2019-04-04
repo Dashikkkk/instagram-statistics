@@ -18,7 +18,9 @@ class CollectorDAO {
                 values(?, ?, ?)',
             [userId, currentTime, 0]);
 
-        return await this._db.getLastInsertedId();
+        return await this._db.scalar('select id from collector where user_id = ? and \
+                started_at = ? and finished_at = ? order by id desc',
+            [userId, currentTime, 0]);
     }
 
     async success(collectorId) {

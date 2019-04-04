@@ -28,6 +28,7 @@ class CollectorLogic {
             });
 
             await this._collectorDAO.success(collectorId);
+            console.log(` [x] Complete for user: ${instagramName}<${userId}>`);
         } catch (err) {
             await this._collectorDAO.fail(collectorId, err);
         }
