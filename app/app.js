@@ -1,9 +1,11 @@
 const root = require('app-root-path').path;
 const express = require('express');
+const cors = require('cors');
 const logger = require('morgan');
 const di = require(root + '/app/di');
 
 const app = express();
+app.use(cors());
 
 app.use(logger('dev'));
 app.use(express.json());
