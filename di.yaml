@@ -27,6 +27,14 @@ services:
     class: ./stats/dao/PostDAO
     arguments: ["@app.db"]
 
+  dao.daily:
+    class: ./reports/dao/BaseDailyStatsDAO
+    arguments: ["@app.db"]
+
+  dao.weekly:
+    class: ./reports/dao/BaseWeeklyStatsDAO
+    arguments: ["@app.db"]
+
   #Logic (Domains)
   logic.user:
     class: ./auth/logic/UserLogic

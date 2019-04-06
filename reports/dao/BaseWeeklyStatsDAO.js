@@ -1,16 +1,16 @@
 const moment = require('moment');
 
-class BaseDailyStatsDAO {
+class BaseWeeklyStatsDAO {
     constructor(db) {
         this._db = db;
     }
 
     _today() {
-        return moment.utc().startOf('day').unix();
+        return moment.utc().startOf('week').unix();
     }
 
     /**
-     * Check for today
+     * Check for this week
      *
      * @param userId
      * @returns {*}
@@ -20,7 +20,7 @@ class BaseDailyStatsDAO {
     }
 
     /**
-     * Checks that we already have stats for this day and user
+     * Checks that we already have stats for this week and user
      *
      * @param userId
      * @param date
@@ -28,24 +28,24 @@ class BaseDailyStatsDAO {
      */
     async check(userId, date) {
         return await this._db.scalar(
-            'select count(*) from base_stats_daily where user_id = ? and date = ?',
+            'select count(*) from base_stats_weekly where user_id = ? and date = ?',
             [userId, date]
         );
     }
 
     /**
-     * Store daily data
+     * Store weekly data
      *
      * @param userId
      * @param data (fields: userId, posts, followers, following, likes, comments)
      * @returns {Promise<void>}
      */
     async add(userId, data) {
-        await this._db.insert('base_stats_daily', {
+        await this._db.insert('base_stats_weekly', {
             ...data,
             date: this._today(),
         });
     }
 }
 
-module.exports.default = BaseDailyStatsDAO;
+module.exports.default = BaseWeeklyStatsDAO;

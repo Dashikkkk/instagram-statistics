@@ -1,4 +1,5 @@
 const db = require('sqlite3').verbose();
+const _ = require('lodash');
 
 class Db {
     constructor() {
@@ -103,6 +104,36 @@ class Db {
     }
 
     /**
+     * Convert camelCase to snake_case
+     *
+     * WARNING: camelCASE will be converted to snake_c_a_s_e
+     *
+     * @param text
+     * @returns {string|Db}
+     * @private
+     */
+    _toSnakeCase(text) {
+        const upperChars = text.match(/([A-Z])/g);
+        if (! upperChars) {
+            return text;
+        }
+
+        let str = text.toString();
+        for (let i = 0, n = upperChars.length; i < n; i++) {
+            str = str.replace(
+                new RegExp(upperChars[i]),
+                '_' + upperChars[i].toLowerCase()
+            );
+        }
+
+        if (str.slice(0, 1) === '_') {
+            str = str.slice(1);
+        }
+
+        return str;
+    };
+
+    /**
      * Simplified insert
      *
      * @param table
@@ -110,7 +141,7 @@ class Db {
      * @returns {Promise<void>}
      */
     async insert(table, data) {
-        const keys = Object.keys(data);
+        const keys = _.map(Object.keys(data), (key) => this._toSnakeCase(key));
         const values = Object.values(data);
         const questionsForQuery = Object.values(data).fill('?');
 
