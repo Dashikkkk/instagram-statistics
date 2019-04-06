@@ -101,6 +101,23 @@ class Db {
             });
         });
     }
+
+    /**
+     * Simplified insert
+     *
+     * @param table
+     * @param data, format {db_field_name: field_value, db_field_name_1: field_value_1, ...}
+     * @returns {Promise<void>}
+     */
+    async insert(table, data) {
+        const keys = Object.keys(data);
+        const values = Object.values(data);
+        const questionsForQuery = Object.values(data).fill('?');
+
+        let sql = `insert into ${table}(${keys.join(',')}) values(${questionsForQuery.join(',')})`;
+
+        return await this.execute(sql, values);
+    }
 }
 
 module.exports.default = Db;
