@@ -41,9 +41,13 @@ class BaseWeeklyStatsDAO {
      * @returns {Promise<void>}
      */
     async add(userId, data) {
+        const currentTime = moment().unix();
+
         await this._db.insert('base_stats_weekly', {
             ...data,
             date: this._today(),
+            created_at: currentTime,
+            updated_at: currentTime,
         });
     }
 }
