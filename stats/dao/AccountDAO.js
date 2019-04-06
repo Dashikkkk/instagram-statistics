@@ -13,9 +13,12 @@ class AccountDAO {
      * @returns {Promise<void>}
      */
     async saveAccountInfo(collectorId, data) {
-        await this._db.execute('insert into stat_account(collector_id, posts, followers, following) \
-            values(?, ?, ?, ?)',
-            [collectorId, data.posts, data.followedBy, data.follow]);
+        await this._db.insert('stat_account', {
+            collector_id: collectorId,
+            posts: data.posts,
+            followers: data.followedBy,
+            following: data.follow,
+        });
     }
 }
 

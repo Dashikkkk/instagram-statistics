@@ -13,10 +13,16 @@ class PostDAO {
      * @returns {Promise<void>}
      */
     async savePostInfo(collectorId, data) {
-        await this._db.execute('insert into stat_post(collector_id, post_id, post_type, short_code, \
-            comments, likes, video_views, post_created_at) values(?, ?, ?, ?, ?, ?, ?, ?)',
-            [collectorId, data.postId, data.postType, data.shortCode, data.comments,
-                data.likes, data.views, data.created]);
+        await this._db.insert('stat_post', {
+            collector_id: collectorId,
+            post_id: data.postId,
+            post_type: data.postType,
+            short_code: data.shortCode,
+            comments: data.comments,
+            likes: data.likes,
+            video_views: data.views,
+            post_created_at: data.created,
+        });
     }
 }
 
