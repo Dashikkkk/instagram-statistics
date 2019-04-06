@@ -14,9 +14,11 @@ class CollectorDAO {
      */
     async start(userId) {
         const currentTime = moment().unix();
-        await this._db.execute('insert into collector(user_id, started_at, finished_at) \
-                values(?, ?, ?)',
-            [userId, currentTime, 0]);
+        await this._db.insert('collector', {
+            user_id: userId,
+            started_at: currentTime,
+            finished_at: 0,
+        });
 
         return await this._db.scalar('select id from collector where user_id = ? and \
                 started_at = ? and finished_at = ? order by id desc',
@@ -25,14 +27,16 @@ class CollectorDAO {
 
     async success(collectorId) {
         const currentTime = moment().unix();
-        await this._db.execute('update collector set finished_at = ?, success = 1',
-            [currentTime]);
+        await this._db.execute('update collector set finished_at = ?, success = 1\
+            where id = ?',
+            [currentTime, collectorId]);
     }
 
     async fail(collectorId, err) {
         const currentTime = moment().unix();
-        await this._db.execute('update collector set finished_at = ?, error_details = ?',
-            [currentTime, err]);
+        await this._db.execute('update collector set finished_at = ?, error_details = ?\
+            where id = ?',
+            [currentTime, err, collectorId]);
     }
 
     /**
