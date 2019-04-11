@@ -5,8 +5,8 @@ class BaseDailyStatsDAO {
         this._db = db;
     }
 
-    _today() {
-        return moment.utc().startOf('day').unix();
+    _yesterday() {
+        return moment.utc().subtract(1, 'days').startOf('day').unix();
     }
 
     /**
@@ -16,7 +16,7 @@ class BaseDailyStatsDAO {
      * @returns {*}
      */
     checkTodayUTC(userId) {
-        return this.check(userId, this._today());
+        return this.check(userId, this._yesterday());
     }
 
     /**
@@ -45,7 +45,7 @@ class BaseDailyStatsDAO {
 
         await this._db.insert('base_stats_daily', {
             ...data,
-            date: this._today(),
+            date: this._yesterday(),
             created_at: currentTime,
             updated_at: currentTime,
         });

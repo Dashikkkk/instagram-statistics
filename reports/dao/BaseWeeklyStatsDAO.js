@@ -5,8 +5,8 @@ class BaseWeeklyStatsDAO {
         this._db = db;
     }
 
-    _today() {
-        return moment.utc().startOf('week').unix();
+    _lastWeek() {
+        return moment.utc().subtract(1, 'week').startOf('week').unix();
     }
 
     /**
@@ -16,7 +16,7 @@ class BaseWeeklyStatsDAO {
      * @returns {*}
      */
     checkTodayUTC(userId) {
-        return this.check(userId, this._today());
+        return this.check(userId, this._lastWeek());
     }
 
     /**
@@ -45,7 +45,7 @@ class BaseWeeklyStatsDAO {
 
         await this._db.insert('base_stats_weekly', {
             ...data,
-            date: this._today(),
+            date: this._lastWeek(),
             created_at: currentTime,
             updated_at: currentTime,
         });
