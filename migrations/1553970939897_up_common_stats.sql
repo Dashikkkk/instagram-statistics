@@ -1,7 +1,7 @@
 create table base_stats_daily (
-    id integer not null primary key autoincrement,
+    id integer not null primary key auto_increment,
     user_id integer not null,
-    date date not null default current_timestamp,
+    date timestamp not null default current_timestamp,
     posts integer not null default 0,
     followers integer not null default 0,
     following integer not null default 0,
@@ -12,9 +12,9 @@ create table base_stats_daily (
 create index base_stats_date on base_stats_daily(date);
 
 create table base_stats_weekly (
-  id integer not null primary key autoincrement,
+  id integer not null primary key auto_increment,
   user_id integer not null,
-  date date not null default current_timestamp,
+  date timestamp not null default current_timestamp,
   posts integer not null default 0,
   followers integer not null default 0,
   following integer not null default 0,

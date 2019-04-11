@@ -1,6 +1,6 @@
 create table stat_post
 (
-    id         integer   not null primary key autoincrement,
+    id         integer   not null primary key auto_increment,
     collector_id    integer   not null,
     post_id    varchar(100) not null default '',
     post_type  varchar(50) not null default 'image',

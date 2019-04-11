@@ -8,4 +8,10 @@ console.log(
 const root = require('app-root-path');
 require('sql-migrations').run({
     migrationsDir: './migrations',
+    host: 'localhost',
+    port: 3306,
+    db: 'smm-statistics',
+    user: 'dashik',
+    password: 'dashik',
+    adapter: 'mysql',
 });
