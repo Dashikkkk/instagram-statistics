@@ -31,11 +31,11 @@ class AccountDAO {
         let startOfDay = 0;
         if (date === undefined) {
             //today is default
-            startOfDay = moment().startOf('day').format();
+            startOfDay = moment().startOf('day');
         } else {
-            startOfDay = moment.unix(date).startOf('day').format();
+            startOfDay = moment.unix(date).startOf('day');
         }
-        const endOfDay = moment.unix(startOfDay).endOf('day').format();
+        const endOfDay = moment.unix(startOfDay).endOf('day');
 
         return await this._db.single(
             'select posts, followers, following from stat_account sa \

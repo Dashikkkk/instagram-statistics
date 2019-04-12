@@ -14,7 +14,7 @@ class PostDAO {
      * @returns {Promise<void>}
      */
     async savePostInfo(collectorId, data) {
-        const currentTime = moment().format();
+        const currentTime = moment();
 
         await this._db.insert('stat_post', {
             collector_id: collectorId,

@@ -69,7 +69,7 @@ class CommonParser {
                 shortCode: post.shortcode,
                 comments: post.edge_media_to_comment.count,
                 likes: post.edge_liked_by.count,
-                createdAt: moment.unix(post.taken_at_timestamp).format(),
+                createdAt: moment.unix(post.taken_at_timestamp),
                 views: post.is_video ? post.video_view_count : 0,
             };
         });

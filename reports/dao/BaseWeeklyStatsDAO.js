@@ -6,7 +6,7 @@ class BaseWeeklyStatsDAO {
     }
 
     _lastWeek() {
-        return moment.utc().subtract(1, 'week').startOf('week').format();
+        return moment.utc().subtract(1, 'week').startOf('week');
     }
 
     /**
@@ -41,7 +41,7 @@ class BaseWeeklyStatsDAO {
      * @returns {Promise<void>}
      */
     async add(userId, data) {
-        const currentTime = moment().format();
+        const currentTime = moment();
 
         await this._db.insert('base_stats_weekly', {
             ...data,

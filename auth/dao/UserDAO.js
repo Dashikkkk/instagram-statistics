@@ -16,7 +16,7 @@ class UserDAO {
      * @returns {Promise<int>}
      */
     async saveUserInfo(instagramId, values) {
-        const currentTime = moment().format();
+        const currentTime = moment();
 
         const fullNameFixed = (Buffer.from(values.fullName, 'utf8')).toString('utf8');
 
@@ -52,7 +52,7 @@ class UserDAO {
      */
     async getActiveUsers() {
         const result = await this._db.query('select id, name from user where last_login_at > ?',
-            [moment.unix(moment().unix() - ActiveUserThreshold).format()]);
+            [moment.unix(moment().unix() - ActiveUserThreshold)]);
         return _.map(result, (row) => {
             return {
                 id: row.id,
