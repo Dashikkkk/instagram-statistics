@@ -14,7 +14,7 @@ class PostDAO {
      * @returns {Promise<void>}
      */
     async savePostInfo(collectorId, data) {
-        const currentTime = moment().unix();
+        const currentTime = moment().format();
 
         await this._db.insert('stat_post', {
             collector_id: collectorId,
@@ -24,9 +24,7 @@ class PostDAO {
             comments: data.comments,
             likes: data.likes,
             video_views: data.views,
-            post_created_at: data.created,
-            created_at: currentTime,
-            updated_at: currentTime,
+            post_created_at: data.createdAt,
         });
     }
 

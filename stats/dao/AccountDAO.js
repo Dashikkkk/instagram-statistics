@@ -13,15 +13,11 @@ class AccountDAO {
      * @returns {Promise<void>}
      */
     async saveAccountInfo(collectorId, data) {
-        const currentTime = moment().unix();
-
         await this._db.insert('stat_account', {
             collector_id: collectorId,
             posts: data.posts,
             followers: data.followedBy,
             following: data.follow,
-            created_at: currentTime,
-            updated_at: currentTime,
         });
     }
 
@@ -35,11 +31,11 @@ class AccountDAO {
         let startOfDay = 0;
         if (date === undefined) {
             //today is default
-            startOfDay = moment().startOf('day').unix();
+            startOfDay = moment().startOf('day').format();
         } else {
-            startOfDay = moment.unix(date).startOf('day').unix();
+            startOfDay = moment.unix(date).startOf('day').format();
         }
-        const endOfDay = moment.unix(startOfDay).endOf('day');
+        const endOfDay = moment.unix(startOfDay).endOf('day').format();
 
         return await this._db.single(
             'select posts, followers, following from stat_account sa \

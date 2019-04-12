@@ -13,14 +13,14 @@ create table user
 
 create index user_instagram_id on user(instagram_id);
 
-create index user_last_login on user(last_login);
+create index user_last_login on user(last_login_at);
 
 create table collector
 (
     id            integer     not null primary key auto_increment,
     user_id       integer     not null,
     started_at    datetime   not null default now(),
-    finished_at   datetime   not null default now(),
+    finished_at   datetime  default null,
     success       integer     not null default 0,
     error_details text                 default null,
     created_at   timestamp    not null default current_timestamp,

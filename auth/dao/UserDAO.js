@@ -28,7 +28,7 @@ class UserDAO {
         if (result) {
             await this._db.execute(
                 'update user set name = ?, full_name = ?, ip = ?, access_token = ?, \
-                    last_login = ? where id = ?',
+                    last_login_at = ? where id = ?',
                 [values.userName, fullNameFixed, values.accessToken,
                     values.ip, currentTime, result.id]
             );
@@ -37,7 +37,7 @@ class UserDAO {
         } else {
             return await this._db.execute(
                 'insert into user(instagram_id, name, full_name, ip, access_token, \
-                    last_login) values \
+                    last_login_at) values \
                     (?, ?, ?, ?, ?, ?)',
                 [instagramId, values.userName, fullNameFixed, values.ip,
                     values.accessToken, currentTime]
@@ -51,7 +51,7 @@ class UserDAO {
      * @returns {Promise<Array>}
      */
     async getActiveUsers() {
-        const result = await this._db.query('select id, name from user where last_login > ?',
+        const result = await this._db.query('select id, name from user where last_login_at > ?',
             [moment.unix(moment().unix() - ActiveUserThreshold).format()]);
         return _.map(result, (row) => {
             return {

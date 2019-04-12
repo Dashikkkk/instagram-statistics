@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const moment = require('moment');
 
 const url = 'https://instagram.com/';
 
@@ -68,7 +69,7 @@ class CommonParser {
                 shortCode: post.shortcode,
                 comments: post.edge_media_to_comment.count,
                 likes: post.edge_liked_by.count,
-                created: post.taken_at_timestamp,
+                createdAt: moment.unix(post.taken_at_timestamp).format(),
                 views: post.is_video ? post.video_view_count : 0,
             };
         });

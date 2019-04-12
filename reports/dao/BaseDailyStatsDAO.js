@@ -6,7 +6,7 @@ class BaseDailyStatsDAO {
     }
 
     _yesterday() {
-        return moment.utc().subtract(1, 'days').startOf('day').unix();
+        return moment.utc().subtract(1, 'days').startOf('day').format();
     }
 
     /**
@@ -41,13 +41,11 @@ class BaseDailyStatsDAO {
      * @returns {Promise<void>}
      */
     async add(userId, data) {
-        const currentTime = moment().unix();
+        const currentTime = moment().format();
 
         await this._db.insert('base_stats_daily', {
             ...data,
             date: this._yesterday(),
-            created_at: currentTime,
-            updated_at: currentTime,
         });
     }
 }
