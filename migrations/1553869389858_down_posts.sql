@@ -1,1 +1,0 @@
-drop table stat_post;
