@@ -21,7 +21,7 @@ Front:
 2. *(ready)* dashboard page draft
 3. detailed stats page draft
 4. worker runs stats page draft
-5. check auth based on jwt
+5. *(ready)* check auth based on jwt
 6. add "waiting spinner"
 7. worker runs info from api
 8. dashboard info from api
