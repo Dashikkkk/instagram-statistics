@@ -125,6 +125,9 @@ router.get('/refresh', async (req, res, next) => {
 
     req.user.ip = getClientIp(req);
 
+    delete req.user.exp;
+    delete req.user.iat;
+
     await userLogic.updateLoginData(req.user);
 
     res.json({jwt: security.sign(req.user)});
