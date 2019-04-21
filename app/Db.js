@@ -1,9 +1,29 @@
-const db = require('sqlite3').verbose();
+const db = require('mysql');
 const _ = require('lodash');
+const moment = require('moment');
 
 class Db {
     constructor() {
-        this._db = new db.Database(process.env.db_sqlite3_file);
+        this._db = new db.createPool({
+            connectionLimit: process.env.db_connections_limit,
+            charset: 'utf8mb4',
+            host: process.env.db_host,
+            port: process.env.db_port,
+            user: process.env.db_user,
+            password: process.env.db_pass,
+            database: process.env.db_base,
+        });
+        this._db.config.connectionLimit = process.env.db_connections_limit;
+        this._db.config.charset = 'utf8mb4';
+    }
+
+    _momentToMySqlUTC(data) {
+        return _.map(data, (value) => {
+            if (value instanceof moment) {
+                return this.toUTC(value);
+            }
+            return value;
+        });
     }
 
     /**
@@ -11,30 +31,16 @@ class Db {
      * @returns {Promise<void>}
      */
     async close() {
-        return await this._db.close();
+        return await this._db.destroy();
     }
+
 
     /**
      * Get direct handler to database library
-     * @returns {db.Database|exports.cached.Database|*|*}
+     * @returns {Pool}
      */
     getHandler() {
         return this._db;
-    }
-
-    /**
-     * Get last inserted id (autoincremented one)
-     * @returns {Promise<int>}
-     */
-    getLastInsertedId() {
-        return new Promise((resolve, reject) => {
-            this._db.get('select last_insert_rowid() as id', (err, row) => {
-                if (err) {
-                    return reject(err);
-                }
-                return resolve(row.id);
-            });
-        });
     }
 
     /**
@@ -46,7 +52,7 @@ class Db {
      */
     query(sql, params) {
         return new Promise((resolve, reject) => {
-            this._db.all(sql, params, (err, rows) => {
+            this._db.query(sql, this._momentToMySqlUTC(params), (err, rows, fields) => {
                 if (err) {
                     return reject(err);
                 }
@@ -64,11 +70,11 @@ class Db {
      */
     single(sql, params) {
         return new Promise((resolve, reject) => {
-            this._db.get(sql, params, (err, row) => {
+            this._db.query(sql, this._momentToMySqlUTC(params), (err, rows) => {
                 if (err) {
                     return reject(err);
                 }
-                return resolve(row);
+                return resolve(rows.length > 0 ? rows[0] : null);
             });
         });
     }
@@ -90,15 +96,19 @@ class Db {
      *
      * @param sql
      * @param params
-     * @returns {Promise<void>}
+     * @returns {Promise<int>} //if insert - returns last inserted id
      */
     execute(sql, params) {
         return new Promise((resolve, reject) => {
-            this._db.run(sql, params, (err) => {
+            this._db.query(sql, this._momentToMySqlUTC(params), (err, results) => {
                 if (err) {
                     return reject(err);
                 }
-                return resolve();
+                let lastInsertedId = 0;
+                if (results.hasOwnProperty('insertId')) {
+                    lastInsertedId = results.insertId;
+                }
+                return resolve(lastInsertedId);
             });
         });
     }
@@ -138,16 +148,24 @@ class Db {
      *
      * @param table
      * @param data, format {db_field_name: field_value, db_field_name_1: field_value_1, ...}
-     * @returns {Promise<void>}
+     * @returns {Promise<int>} //returns last inserted id
      */
     async insert(table, data) {
         const keys = _.map(Object.keys(data), (key) => this._toSnakeCase(key));
-        const values = Object.values(data);
+        const values = this._momentToMySqlUTC(Object.values(data));
         const questionsForQuery = Object.values(data).fill('?');
 
         let sql = `insert into ${table}(${keys.join(',')}) values(${questionsForQuery.join(',')})`;
 
         return await this.execute(sql, values);
+    }
+
+    toUTC(momentDate) {
+        return momentDate.utc().format('YYYY-MM-DD HH:mm:ss');
+    }
+
+    fromUTC(date) {
+        return moment.utc(date);
     }
 }
 

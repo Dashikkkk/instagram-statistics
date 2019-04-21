@@ -13,27 +13,23 @@ class CollectorDAO {
      * @returns {Promise<int>}
      */
     async start(userId) {
-        const currentTime = moment().unix();
-        await this._db.insert('collector', {
+        const currentTime = moment();
+        return await this._db.insert('collector', {
             user_id: userId,
             started_at: currentTime,
-            finished_at: 0,
+            finished_at: null,
         });
-
-        return await this._db.scalar('select id from collector where user_id = ? and \
-                started_at = ? and finished_at = ? order by id desc',
-            [userId, currentTime, 0]);
     }
 
     async success(collectorId) {
-        const currentTime = moment().unix();
+        const currentTime = moment();
         await this._db.execute('update collector set finished_at = ?, success = 1\
             where id = ?',
             [currentTime, collectorId]);
     }
 
     async fail(collectorId, err) {
-        const currentTime = moment().unix();
+        const currentTime = moment();
         await this._db.execute('update collector set finished_at = ?, error_details = ?\
             where id = ?',
             [currentTime, err, collectorId]);
@@ -54,8 +50,8 @@ class CollectorDAO {
         return _.map(result, (row) => {
             return {
                 id: row.id,
-                started: row.started_at,
-                finished: row.finished_at,
+                startedAt: this._db.fromUTC(row.started_at),
+                finishedAt: this._db.fromUTC(row.finished_at),
                 success: row.success > 0,
                 errorDetails: row.error_details,
             };

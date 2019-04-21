@@ -16,7 +16,10 @@ class UserDAO {
      * @returns {Promise<int>}
      */
     async saveUserInfo(instagramId, values) {
-        const currentTime = moment().unix();
+        const currentTime = moment();
+
+        const fullNameFixed = (Buffer.from(values.fullName, 'utf8')).toString('utf8');
+
         const result = await this._db.single(
             'select id from user where instagram_id = ?',
             [instagramId]
@@ -25,22 +28,20 @@ class UserDAO {
         if (result) {
             await this._db.execute(
                 'update user set name = ?, full_name = ?, ip = ?, access_token = ?, \
-                    last_login = ?, updated_at = ? where id = ?',
-                [values.userName, values.fullName, values.accessToken,
-                    values.ip, currentTime, currentTime, result.id]
+                    last_login_at = ? where id = ?',
+                [values.userName, fullNameFixed, values.accessToken,
+                    values.ip, currentTime, result.id]
             );
 
             return result.id;
         } else {
-            await this._db.execute(
+            return await this._db.execute(
                 'insert into user(instagram_id, name, full_name, ip, access_token, \
-                    last_login, created_at, updated_at) values \
-                    (?, ?, ?, ?, ?, ?, ?, ?)',
-                [instagramId, values.userName, values.fullName, values.ip,
-                    values.accessToken, currentTime, currentTime, currentTime]
+                    last_login_at) values \
+                    (?, ?, ?, ?, ?, ?)',
+                [instagramId, values.userName, fullNameFixed, values.ip,
+                    values.accessToken, currentTime]
             );
-
-            return await this._db.getLastInsertedId();
         }
     }
 
@@ -50,8 +51,8 @@ class UserDAO {
      * @returns {Promise<Array>}
      */
     async getActiveUsers() {
-        const result = await this._db.query('select id, name from user where last_login > ?',
-            [moment().unix() - ActiveUserThreshold]);
+        const result = await this._db.query('select id, name from user where last_login_at > ?',
+            [moment.unix(moment().unix() - ActiveUserThreshold)]);
         return _.map(result, (row) => {
             return {
                 id: row.id,

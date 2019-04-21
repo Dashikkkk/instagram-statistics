@@ -30,6 +30,7 @@ console.log('Collector running at', moment().utc().toString());
         await pool.start();
 
         console.log('Complete\n');
+        process.exit(0);
     } catch (err) {
         console.log('Error while collecting: ', err);
         process.exit(1);
